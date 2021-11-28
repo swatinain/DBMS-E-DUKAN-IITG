@@ -1,0 +1,209 @@
+minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*?[0-9])(?=.*?[!@#$%^&*+`~|<>/]).{8,}" title="Must contain at least one integer and one lowerrcase and uppercase letter,one special character and at least 8 or more characters" 
+
+CREATE TABLE `users` ( 
+`username` text NOT NULL,
+`password` text NOT NULL) 
+ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+
+create database e_dukan;
+
+CREATE USER 'swati'@'localhost' IDENTIFIED BY 'nain';
+GRANT ALL PRIVILEGES ON e_dukan.* to 'swati'@'localhost';
+
+create table admin(
+	aid varchar(20),
+	email varchar(30) unique,
+	walletBalance real default 0,
+	pass varchar(100),
+	aname varchar(50),
+	contactNo bigint,
+	primary key(aid)
+);
+INSERT INTO `admin`(`aid`, `email`, `pass`, `aname`) VALUES ('123','admin','admin123','admin');
+
+create table customercare(
+	ccid varchar(20),
+	ename varchar(50) unique,
+	walletBalance real default 0,
+	email varchar(30),
+	pass varchar(100),
+	contactNo bigint,
+	primary key(ccid)
+);
+INSERT INTO `customercare`(`ccid`, `ename`, `email`, `pass`, `contactNo`) VALUES ('202123055','swati','swati2000','swati123',7404246173);
+INSERT INTO `customercare`(`ccid`, `ename`, `email`, `pass`, `contactNo`) VALUES ('202123046','shivani','sagrahari','sa123',7408301428);
+INSERT INTO `customercare`(`ccid`, `email`, `pass`) VALUES ('2','2','2');
+
+
+
+INSERT INTO `buyer`(`buyerID`,  `email`, `pass`) VALUES ('202123055','swati2000','swati123');
+INSERT INTO `seller`(`sellerID`,  `email`, `pass`) VALUES ('202123046','sagrahari','sa123');
+
+
+create table users(
+	userid varchar(20),
+	uname varchar(50),
+	email varchar(30) unique,
+	pass varchar(100),
+	walletBalance real default 0,
+	occupation varchar(20),
+	address varchar(100),
+	contactNo bigint,
+	primary key(userid)
+);
+
+create table seller(
+	sellerID varchar(20),
+	sname varchar(50),
+	email varchar(30) unique,
+	pass varchar(100),
+	walletBalance real default 0,
+	occupation varchar(20),
+	address varchar(100),
+	sellerRating real,
+	contactNo bigint,
+	primary key(sellerID),
+	foreign key(sellerID) references users(userid) on delete cascade on update cascade
+);
+
+create table buyer(
+	buyerID varchar(20),
+	bname varchar(50),
+	email varchar(30) unique,
+	pass varchar(100),
+	walletBalance real default 0,
+	occupation varchar(20),
+	address varchar(100),
+	buyerRating real,
+	contactNo bigint,
+	primary key(buyerID),
+	foreign key(buyerID)references users(userid) on delete cascade on update cascade
+);
+
+create table product(
+	sellerID  varchar(20) not null,
+	pid  varchar(20) not null unique,
+	pname varchar(100),
+	price real,
+	category varchar(50),
+	description varchar(255),
+	primary key(pid),
+	inStock bit,
+	foreign key(sellerid)references seller(sellerID) on delete cascade on update cascade
+);
+
+create TABLE productImages(
+	sellerID varchar(20) not null,
+	pid varchar(20) not null,
+	imageNo int,
+	imageLocation varchar(255),
+	foreign key(sellerid)references seller(sellerID) on delete cascade on update cascade,
+	foreign key(pid)references product(pid) on delete cascade on update cascade
+);
+
+create table cart(
+	cartID int auto_increment,
+	buyerID varchar(20) unique,
+	primary key(cartID),
+	foreign key(buyerid)references buyer(buyerID) on delete cascade on update cascade
+);
+
+create table contacts(
+	ccid varchar(20),
+	userid varchar(20),
+	primary key(ccid,userid),
+	foreign key(ccid)references customercare(ccid) on delete cascade on update cascade,
+	foreign key(userid)references users(userid) on delete cascade on update cascade
+);
+
+create table assigns(
+	aid varchar(20),
+	ccid varchar(20),
+	primary key(aid,ccid),
+	foreign key(aid) references admin(aid) on delete cascade on update cascade,
+	foreign key(ccid) references customercare(ccid) on delete cascade on update cascade
+);
+
+create table pays(
+	aid varchar(20),
+	sellerID varchar(20),
+    pid varchar(20),
+	amount real,
+	paymentDate datetime default CURRENT_TIMESTAMP,
+	PaymentID int auto_increment,
+	primary key(PaymentID),
+	foreign key(aid) references admin(aid) on delete cascade on update cascade,
+	foreign key(sellerID) references seller(sellerID) on delete cascade on update cascade,
+    foreign key(pid) references product(pid) on delete cascade on update cascade
+);
+
+create table payment(
+	buyerID varchar(20),
+	pid varchar(20),
+	aid varchar(20),
+	paymentamount real,
+	paymentDate datetime default CURRENT_TIMESTAMP,
+	paymentID int auto_increment,
+	primary key(paymentID),
+	foreign key(buyerID) references buyer(buyerID) on delete cascade on update cascade,
+	foreign key(pid) references product(pid) on delete cascade on update cascade,
+	foreign key(aid) references admin(aid) on delete cascade on update cascade
+);
+
+create table addedTo(
+	pid varchar(20),
+	buyerID varchar(20),
+	primary key(pid,buyerID),
+	foreign key(pid) references product(pid) on delete cascade on update cascade,
+	foreign key(buyerID) references buyer(buyerID) on delete cascade on update cascade
+);
+
+UPDATE `users` SET `walletBalance`=0 WHERE 1;
+UPDATE `buyer` SET `walletBalance`=0 WHERE 1;
+UPDATE `seller` SET `walletBalance`=0 WHERE 1;
+UPDATE `admin` SET `walletBalance`=0 WHERE 1;
+DELETE  from payment where 1;
+DELETE  from pays where 1;
+DELETE  from addedTo where 1;
+UPDATE `product` SET `inStock`=1 WHERE 1;
+Delete from addedto where 1;
+Delete from payment where 1;
+Delete from pays where 1;
+
+
+
+Delete from product where 1;
+Delete from addedto where 1;
+Delete from admin  where 1;
+Delete from assigns where 1;
+Delete from buyer  where 1;
+Delete from cart where 1;
+Delete from contacts where 1;
+Delete from customercare where 1;
+Delete from payment where 1;
+Delete from pays where 1;
+Delete from seller where 1;
+Delete from users where 1;
+
+describe addedto;
+describe admin;
+describe assigns;
+describe buyer;
+describe cart;
+describe contacts;
+describe customercare;
+describe payment;
+describe pays;
+describe product;
+describe seller;
+describe users;
+
+//Dumping data in admin
+INSERT INTO `admin`(`aid`, `email`, `pass`, `aname`, `contactNo`) VALUES ('admin','admin@iitg.ac.in','admin123','Admin',1234567890);
+
+
+//Dumping data in CC
+INSERT INTO `customercare`(`ccid`, `ename`,  `email`, `pass`, `contactNo`) VALUES ('202123055','Swati Nain','swati2000@iitg.ac.in','Swati@123',7404246173);
+INSERT INTO `customercare`(`ccid`, `ename`, `email`, `pass`, `contactNo`) VALUES ('202123046','Shivani Sadiyal','sagrahari0@iitg.ac.in','Shiv@123',7408301428);
