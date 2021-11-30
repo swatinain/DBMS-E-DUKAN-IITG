@@ -9,5 +9,3 @@ a portal where everyone on the IITG campus can buy or sell used products, so tha
 they don’t have to worry about all the expenses going out of hand, as they will be getting 
 their required products on our portal, for a lower price, from all the products that have been 
 uploaded here by the people who no longer need it.
-
-<img width="867" alt="ICICI" src="https://user-images.githubusercontent.com/76652079/144014697-7525e11d-e460-4c06-be5d-dfce5097913a.png">
